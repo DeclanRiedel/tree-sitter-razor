@@ -1,0 +1,272 @@
+================================================================================
+Bind directive attribute
+================================================================================
+
+<input @bind-Value="name" />
+
+--------------------------------------------------------------------------------
+
+(document
+  (markup
+    (self_closing_element
+      name: (tag_name)
+      attribute: (razor_directive_attribute
+        directive: (identifier)
+        suffix: (identifier)
+        value: (attribute_value)))))
+
+================================================================================
+Event handler attribute
+================================================================================
+
+<button @onclick="HandleClick">Click</button>
+
+--------------------------------------------------------------------------------
+
+(document
+  (markup
+    (normal_element
+      open_tag: (start_tag
+        name: (tag_name)
+        attribute: (razor_directive_attribute
+          directive: (identifier)
+          value: (attribute_value)))
+      (text)
+      close_tag: (end_tag
+        name: (tag_name)))))
+
+================================================================================
+Ref attribute
+================================================================================
+
+<input @ref="myInput" />
+
+--------------------------------------------------------------------------------
+
+(document
+  (markup
+    (self_closing_element
+      name: (tag_name)
+      attribute: (razor_directive_attribute
+        directive: (identifier)
+        value: (attribute_value)))))
+
+================================================================================
+Key attribute
+================================================================================
+
+<li @key="item.Id">@item.Name</li>
+
+--------------------------------------------------------------------------------
+
+(document
+  (markup
+    (normal_element
+      open_tag: (start_tag
+        name: (tag_name)
+        attribute: (razor_directive_attribute
+          directive: (identifier)
+          value: (attribute_value)))
+      (inline_expression
+        access: (member_access
+          (csharp_identifier)
+          (csharp_identifier)))
+      (text)
+      close_tag: (end_tag
+        name: (tag_name)))))
+
+================================================================================
+Attributes splatting
+================================================================================
+
+<div @attributes="AdditionalAttributes"></div>
+
+--------------------------------------------------------------------------------
+
+(document
+  (markup
+    (normal_element
+      open_tag: (start_tag
+        name: (tag_name)
+        attribute: (razor_directive_attribute
+          directive: (identifier)
+          value: (attribute_value)))
+      close_tag: (end_tag
+        name: (tag_name)))))
+
+================================================================================
+Bind with event
+================================================================================
+
+<input @bind-Value:event="onchange" />
+
+--------------------------------------------------------------------------------
+
+(document
+  (markup
+    (self_closing_element
+      name: (tag_name)
+      attribute: (razor_directive_attribute
+        directive: (identifier)
+        suffix: (identifier)
+        value: (attribute_value)))))
+
+================================================================================
+Bind with format
+================================================================================
+
+<input @bind-Value:format="yyyy-MM-dd" />
+
+--------------------------------------------------------------------------------
+
+(document
+  (markup
+    (self_closing_element
+      name: (tag_name)
+      attribute: (razor_directive_attribute
+        directive: (identifier)
+        suffix: (identifier)
+        value: (attribute_value)))))
+
+================================================================================
+Multiple attributes mixed
+================================================================================
+
+<input type="text" 
+       @bind-Value="Name" 
+       class="form-control" 
+       @onfocus="OnFocus" />
+
+--------------------------------------------------------------------------------
+
+(document
+  (markup
+    (self_closing_element
+      name: (tag_name)
+      attribute: (standard_attribute
+        name: (attribute_name)
+        value: (attribute_value))
+      attribute: (razor_directive_attribute
+        directive: (identifier)
+        suffix: (identifier)
+        value: (attribute_value))
+      attribute: (standard_attribute
+        name: (attribute_name)
+        value: (attribute_value))
+      attribute: (razor_directive_attribute
+        directive: (identifier)
+        value: (attribute_value)))))
+
+================================================================================
+Nested HTML elements
+================================================================================
+
+<div class="container">
+    <h1>Title</h1>
+    <p>Paragraph</p>
+</div>
+
+--------------------------------------------------------------------------------
+
+(document
+  (markup
+    (normal_element
+      open_tag: (start_tag
+        name: (tag_name)
+        attribute: (standard_attribute
+          name: (attribute_name)
+          value: (attribute_value)))
+      (normal_element
+        open_tag: (start_tag
+          name: (tag_name))
+        (text)
+        close_tag: (end_tag
+          name: (tag_name)))
+      (normal_element
+        open_tag: (start_tag
+          name: (tag_name))
+        (text)
+        close_tag: (end_tag
+          name: (tag_name)))
+      close_tag: (end_tag
+        name: (tag_name)))))
+
+================================================================================
+Complex Blazor component
+================================================================================
+
+@page "/counter"
+@inject IJSRuntime JS
+
+<PageTitle>Counter</PageTitle>
+
+<h1>Counter</h1>
+
+<p role="status">Current count: @currentCount</p>
+
+<button class="btn btn-primary" @onclick="IncrementCount">
+    Click me
+</button>
+
+@code {
+    private int currentCount = 0;
+
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (directive
+    (page_directive
+      route: (string_literal)))
+  (directive
+    (inject_directive
+      type: (csharp_type
+        (csharp_identifier))
+      name: (csharp_identifier)))
+  (markup
+    (normal_element
+      open_tag: (start_tag
+        name: (tag_name))
+      (text)
+      close_tag: (end_tag
+        name: (tag_name))))
+  (markup
+    (normal_element
+      open_tag: (start_tag
+        name: (tag_name))
+      (text)
+      close_tag: (end_tag
+        name: (tag_name))))
+  (markup
+    (normal_element
+      open_tag: (start_tag
+        name: (tag_name)
+        attribute: (standard_attribute
+          name: (attribute_name)
+          value: (attribute_value)))
+      (text)
+      (inline_expression
+        identifier: (csharp_identifier))
+      (text)
+      close_tag: (end_tag
+        name: (tag_name))))
+  (markup
+    (normal_element
+      open_tag: (start_tag
+        name: (tag_name)
+        attribute: (standard_attribute
+          name: (attribute_name)
+          value: (attribute_value))
+        attribute: (razor_directive_attribute
+          directive: (identifier)
+          value: (attribute_value)))
+      (text)
+      close_tag: (end_tag
+        name: (tag_name))))
+  (code_directive
+    body: (csharp_block_content)))

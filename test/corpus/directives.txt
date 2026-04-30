@@ -1,0 +1,457 @@
+================================================================================
+Simple page directive
+================================================================================
+
+@page "/"
+
+--------------------------------------------------------------------------------
+
+(document
+  (directive
+    (page_directive
+      route: (string_literal))))
+
+================================================================================
+Inject directive
+================================================================================
+
+@inject IWeatherService WeatherService
+
+--------------------------------------------------------------------------------
+
+(document
+  (directive
+    (inject_directive
+      type: (csharp_type
+        (csharp_identifier))
+      name: (csharp_identifier))))
+
+================================================================================
+Inject directive with generic type
+================================================================================
+
+@inject ILogger<WeatherService> Logger
+
+--------------------------------------------------------------------------------
+
+(document
+  (directive
+    (inject_directive
+      type: (csharp_type
+        (csharp_identifier)
+        (generic_args
+          (csharp_type
+            (csharp_identifier))))
+      name: (csharp_identifier))))
+
+================================================================================
+Using directive
+================================================================================
+
+@using System.Collections.Generic
+
+--------------------------------------------------------------------------------
+
+(document
+  (directive
+    (using_directive
+      namespace: (identifier_path
+        (csharp_identifier)
+        (csharp_identifier)
+        (csharp_identifier)))))
+
+================================================================================
+Code block
+================================================================================
+
+@code {
+    private int count = 0;
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (code_directive
+    body: (csharp_block_content)))
+
+================================================================================
+Functions block
+================================================================================
+
+@functions {
+    public void DoSomething() { }
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (functions_directive
+    body: (csharp_block_content)))
+
+================================================================================
+Razor comment
+================================================================================
+
+@* This is a comment *@
+
+--------------------------------------------------------------------------------
+
+(document
+  (razor_comment))
+
+================================================================================
+Inline expression - identifier
+================================================================================
+
+<p>@count</p>
+
+--------------------------------------------------------------------------------
+
+(document
+  (markup
+    (normal_element
+      open_tag: (start_tag
+        name: (tag_name))
+      (text)
+      (inline_expression
+        identifier: (csharp_identifier))
+      (text)
+      close_tag: (end_tag
+        name: (tag_name)))))
+
+================================================================================
+Inline expression - member access
+================================================================================
+
+<p>@Model.Name</p>
+
+--------------------------------------------------------------------------------
+
+(document
+  (markup
+    (normal_element
+      open_tag: (start_tag
+        name: (tag_name))
+      (text)
+      (inline_expression
+        access: (member_access
+          (csharp_identifier)
+          (csharp_identifier)))
+      (text)
+      close_tag: (end_tag
+        name: (tag_name)))))
+
+================================================================================
+Explicit expression
+================================================================================
+
+<p>@(count + 1)</p>
+
+--------------------------------------------------------------------------------
+
+(document
+  (markup
+    (normal_element
+      open_tag: (start_tag
+        name: (tag_name))
+      (text)
+      (explicit_expression
+        expression: (csharp_expression_content))
+      (text)
+      close_tag: (end_tag
+        name: (tag_name)))))
+
+================================================================================
+HTML element with attributes
+================================================================================
+
+<button class="btn" @onclick="Increment">Click</button>
+
+--------------------------------------------------------------------------------
+
+(document
+  (markup
+    (normal_element
+      open_tag: (start_tag
+        name: (tag_name)
+        attribute: (attribute
+          name: (attribute_name)
+          value: (attribute_value))
+        attribute: (attribute
+          name: (attribute_name)))
+      (text)
+      close_tag: (end_tag
+        name: (tag_name)))))
+
+================================================================================
+Self-closing element
+================================================================================
+
+<input type="text" />
+
+--------------------------------------------------------------------------------
+
+(document
+  (markup
+    (self_closing_element
+      name: (tag_name)
+      attribute: (attribute
+        name: (attribute_name)
+        value: (attribute_value)))))
+
+================================================================================
+Multiple directives
+================================================================================
+
+@page "/weather"
+@inject IWeatherService Service
+
+<h1>Weather</h1>
+
+--------------------------------------------------------------------------------
+
+(document
+  (directive
+    (page_directive
+      route: (string_literal)))
+  (directive
+    (inject_directive
+      type: (csharp_type
+        (csharp_identifier))
+      name: (csharp_identifier)))
+  (markup
+    (normal_element
+      open_tag: (start_tag
+        name: (tag_name))
+      (text)
+      close_tag: (end_tag
+        name: (tag_name)))))
+
+================================================================================
+If statement
+================================================================================
+
+@if (showMessage)
+{
+    <p>Hello!</p>
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (control_structure
+    (if_statement
+      condition: (csharp_expression_content)
+      body: (csharp_block_content
+        (normal_element
+          open_tag: (start_tag
+            name: (tag_name))
+          (text)
+          close_tag: (end_tag
+            name: (tag_name)))))))
+
+================================================================================
+Foreach loop
+================================================================================
+
+@foreach (var item in items)
+{
+    <li>@item.Name</li>
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (control_structure
+    (foreach_statement
+      item_type: (csharp_type
+        (csharp_identifier))
+      item: (csharp_identifier)
+      collection: (csharp_expression_content)
+      body: (csharp_block_content
+        (normal_element
+          open_tag: (start_tag
+            name: (tag_name))
+          (inline_expression
+            access: (member_access
+              (csharp_identifier)
+              (csharp_identifier)))
+          (text)
+          close_tag: (end_tag
+            name: (tag_name)))))))
+
+================================================================================
+Nested code blocks
+================================================================================
+
+@code {
+    public void Method() {
+        if (true) {
+            var x = 1;
+        }
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (code_directive
+    body: (csharp_block_content)))
+
+================================================================================
+Model directive
+================================================================================
+
+@model WeatherForecast
+
+--------------------------------------------------------------------------------
+
+(document
+  (directive
+    (model_directive
+      type: (csharp_type
+        (csharp_identifier)))))
+
+================================================================================
+Layout directive
+================================================================================
+
+@layout "_Layout"
+
+--------------------------------------------------------------------------------
+
+(document
+  (directive
+    (layout_directive
+      path: (string_literal))))
+
+================================================================================
+Namespace directive
+================================================================================
+
+@namespace MyApp.Components
+
+--------------------------------------------------------------------------------
+
+(document
+  (directive
+    (namespace_directive
+      name: (identifier_path
+        (csharp_identifier)
+        (csharp_identifier)))))
+
+================================================================================
+Attribute directive
+================================================================================
+
+@attribute [Authorize]
+
+--------------------------------------------------------------------------------
+
+(document
+  (directive
+    (attribute_directive
+      type: (csharp_type
+        (csharp_identifier)))))
+
+================================================================================
+Implements directive
+================================================================================
+
+@implements IDisposable
+
+--------------------------------------------------------------------------------
+
+(document
+  (directive
+    (implements_directive
+      type: (csharp_type
+        (csharp_identifier)))))
+
+================================================================================
+Inherits directive
+================================================================================
+
+@inherits ComponentBase
+
+--------------------------------------------------------------------------------
+
+(document
+  (directive
+    (inherits_directive
+      type: (csharp_type
+        (csharp_identifier)))))
+
+================================================================================
+Complex generic type
+================================================================================
+
+@inject IEnumerable<KeyValuePair<string, int>> Data
+
+--------------------------------------------------------------------------------
+
+(document
+  (directive
+    (inject_directive
+      type: (csharp_type
+        (csharp_identifier)
+        (generic_args
+          (csharp_type
+            (csharp_identifier)
+            (generic_args
+              (csharp_type
+                (csharp_identifier))
+              (csharp_type
+                (csharp_identifier))))))
+      name: (csharp_identifier))))
+
+================================================================================
+Code block with nested braces
+================================================================================
+
+@{
+    var items = new List<string> {
+        "one",
+        "two"
+    };
+}
+
+--------------------------------------------------------------------------------
+
+(document
+  (code_block
+    body: (csharp_block_content
+      (csharp_block_content))))
+
+================================================================================
+Method call in expression
+================================================================================
+
+<p>@Service.GetData()</p>
+
+--------------------------------------------------------------------------------
+
+(document
+  (markup
+    (normal_element
+      open_tag: (start_tag
+        name: (tag_name))
+      (text)
+      (inline_expression
+        call: (method_call
+          (csharp_identifier)))
+      (text)
+      close_tag: (end_tag
+        name: (tag_name)))))
+
+================================================================================
+Ternary expression
+================================================================================
+
+@(isActive ? "active" : "inactive")
+
+--------------------------------------------------------------------------------
+
+(document
+  (explicit_expression
+    expression: (csharp_expression_content)))

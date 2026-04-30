@@ -1,0 +1,39 @@
+{
+  "name": "tree-sitter-razor",
+  "version": "0.1.0",
+  "description": "Tree-sitter grammar for Razor/Blazor files",
+  "main": "bindings/node",
+  "types": "bindings/node",
+  "keywords": [
+    "tree-sitter",
+    "razor",
+    "blazor",
+    "parser",
+    "grammar"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "nan": "^2.18.0"
+  },
+  "devDependencies": {
+    "tree-sitter-cli": "^0.22.6"
+  },
+  "tree-sitter": [
+    {
+      "scope": "source.razor",
+      "file-types": ["razor"],
+      "injection-regex": "^razor$"
+    }
+  ],
+  "scripts": {
+    "generate": "tree-sitter generate",
+    "test": "tree-sitter test",
+    "parse": "tree-sitter parse",
+    "build": "tree-sitter build --wasm"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your/tree-sitter-razor"
+  }
+}
