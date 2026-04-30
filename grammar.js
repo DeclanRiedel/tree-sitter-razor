@@ -9,11 +9,9 @@ module.exports = grammar({
   ],
 
   conflicts: $ => [
-    [$.markup, $.text],
-    [$.inline_expression, $.directive],
     [$.csharp_type],
-    [$.csharp_block_content, $.string_literal],
     [$.csharp_block_content],
+    [$.inline_expression, $.control_structure],
   ],
 
   rules: {
@@ -21,7 +19,10 @@ module.exports = grammar({
       choice(
         $.razor_comment,
         $.directive,
+        $.code_directive,
+        $.functions_directive,
         $.code_block,
+        $.control_structure,
         $.inline_expression,
         $.explicit_expression,
         $.markup,
@@ -48,8 +49,6 @@ module.exports = grammar({
         $.inherits_directive,
         $.layout_directive,
         $.attribute_directive,
-        $.code_directive,
-        $.functions_directive,
         $.namespace_directive,
         $.typeparam_directive,
         $.preservewhitespace_directive,
@@ -104,14 +103,14 @@ module.exports = grammar({
     ),
 
     code_directive: $ => seq(
-      'code',
+      '@code',
       '{',
       field('body', $.csharp_block_content),
       '}'
     ),
 
     functions_directive: $ => seq(
-      'functions',
+      '@functions',
       '{',
       field('body', $.csharp_block_content),
       '}'
@@ -167,8 +166,6 @@ module.exports = grammar({
         $.explicit_expression,
         $.inline_expression,
         seq('{', $.csharp_block_content, '}'),
-        seq('"', /[^"]*/, '"'),
-        seq("'", /[^']*/, "'"),
       )
     ),
 
@@ -229,13 +226,9 @@ module.exports = grammar({
     ),
 
     markup: $ => choice(
-      $.element,
-      $.text,
-    ),
-
-    element: $ => choice(
       $.self_closing_element,
       $.normal_element,
+      $.text,
     ),
 
     self_closing_element: $ => seq(
@@ -248,7 +241,8 @@ module.exports = grammar({
     normal_element: $ => seq(
       field('open_tag', $.start_tag),
       repeat(choice(
-        $.element,
+        $.normal_element,
+        $.self_closing_element,
         $.text,
         $.razor_comment,
         $.inline_expression,
@@ -275,30 +269,29 @@ module.exports = grammar({
     tag_name: $ => /[A-Za-z][A-Za-z0-9\-\.]*/,
 
     attribute: $ => choice(
-      $.standard_attribute,
+      seq(
+        field('name', $.attribute_name),
+        optional(seq(
+          '=',
+          field('value', choice(
+            $.attribute_value,
+            $.inline_expression,
+            $.explicit_expression,
+          ))
+        ))
+      ),
       $.razor_directive_attribute,
     ),
 
-    standard_attribute: $ => seq(
-      field('name', $.attribute_name),
-      optional(seq(
-        '=',
-        field('value', choice(
-          $.attribute_value,
-          $.inline_expression,
-          $.explicit_expression,
-        ))
-      ))
-    ),
-
     razor_directive_attribute: $ => seq(
-      field('directive', choice('@bind', '@on', '@ref', '@key', '@attributes')),
+      '@',
+      field('directive', $.identifier),
       optional(seq(
         '-',
-        field('suffix', /[A-Za-z][A-Za-z0-9_]*/),
+        field('suffix', $.identifier),
         optional(seq(
           ':',
-          field('modifier', /[A-Za-z]+/)
+          field('modifier', $.identifier)
         ))
       )),
       optional(seq(
@@ -311,13 +304,15 @@ module.exports = grammar({
       ))
     ),
 
-    attribute_name: $ => /[@A-Za-z_][@A-Za-z0-9_\-:]*/,
+    attribute_name: $ => /[A-Za-z_][A-Za-z0-9_\-:]*/,
 
     attribute_value: $ => choice(
       seq('"', /[^"]*/, '"'),
       seq("'", /[^']*/, "'"),
       /[A-Za-z0-9_\-]+/
     ),
+
+    identifier: $ => /[A-Za-z_][A-Za-z0-9_]*/,
 
     control_structure: $ => seq(
       '@',
@@ -340,13 +335,15 @@ module.exports = grammar({
       ')',
       choice(
         field('body', $.csharp_block_content),
-        field('body', $.element),
+        field('body', $.normal_element),
+        field('body', $.self_closing_element),
       ),
       optional(seq(
         'else',
         choice(
           field('else_body', $.csharp_block_content),
-          field('else_body', $.element),
+          field('else_body', $.normal_element),
+          field('else_body', $.self_closing_element),
           field('else_body', $.if_statement),
         )
       ))
@@ -362,7 +359,8 @@ module.exports = grammar({
       ')',
       choice(
         field('body', $.csharp_block_content),
-        field('body', $.element),
+        field('body', $.normal_element),
+        field('body', $.self_closing_element),
       )
     ),
 
@@ -377,7 +375,8 @@ module.exports = grammar({
       ')',
       choice(
         field('body', $.csharp_block_content),
-        field('body', $.element),
+        field('body', $.normal_element),
+        field('body', $.self_closing_element),
       )
     ),
 
@@ -388,7 +387,8 @@ module.exports = grammar({
       ')',
       choice(
         field('body', $.csharp_block_content),
-        field('body', $.element),
+        field('body', $.normal_element),
+        field('body', $.self_closing_element),
       )
     ),
 
@@ -403,12 +403,11 @@ module.exports = grammar({
     ),
 
     switch_section: $ => seq(
-      repeat1(choice(
-        $.switch_label,
-      )),
+      repeat1($.switch_label),
       choice(
         field('body', $.csharp_block_content),
-        field('body', $.element),
+        field('body', $.normal_element),
+        field('body', $.self_closing_element),
       )
     ),
 
@@ -425,7 +424,8 @@ module.exports = grammar({
       ')',
       choice(
         field('body', $.csharp_block_content),
-        field('body', $.element),
+        field('body', $.normal_element),
+        field('body', $.self_closing_element),
       )
     ),
 
@@ -459,10 +459,11 @@ module.exports = grammar({
       ')',
       choice(
         field('body', $.csharp_block_content),
-        field('body', $.element),
+        field('body', $.normal_element),
+        field('body', $.self_closing_element),
       )
     ),
 
-    text: $ => /[^<@]+/,
+    text: $ => /[^\s<@][^<@]*/,
   },
 });

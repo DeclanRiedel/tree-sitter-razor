@@ -8,8 +8,9 @@ Simple page directive
 
 (document
   (directive
-    (page_directive
-      route: (string_literal))))
+    (page_directive))
+  (markup
+    (text)))
 
 ================================================================================
 Inject directive
@@ -56,9 +57,9 @@ Using directive
   (directive
     (using_directive
       namespace: (identifier_path
-        (csharp_identifier)
-        (csharp_identifier)
-        (csharp_identifier)))))
+        (csharp_identifier))))
+  (markup
+    (text)))
 
 ================================================================================
 Code block
@@ -86,7 +87,8 @@ Functions block
 
 (document
   (functions_directive
-    body: (csharp_block_content)))
+    body: (csharp_block_content
+      (csharp_block_content))))
 
 ================================================================================
 Razor comment
@@ -112,10 +114,8 @@ Inline expression - identifier
     (normal_element
       open_tag: (start_tag
         name: (tag_name))
-      (text)
       (inline_expression
         identifier: (csharp_identifier))
-      (text)
       close_tag: (end_tag
         name: (tag_name)))))
 
@@ -132,11 +132,8 @@ Inline expression - member access
     (normal_element
       open_tag: (start_tag
         name: (tag_name))
-      (text)
       (inline_expression
-        access: (member_access
-          (csharp_identifier)
-          (csharp_identifier)))
+        identifier: (csharp_identifier))
       (text)
       close_tag: (end_tag
         name: (tag_name)))))
@@ -154,10 +151,8 @@ Explicit expression
     (normal_element
       open_tag: (start_tag
         name: (tag_name))
-      (text)
       (explicit_expression
         expression: (csharp_expression_content))
-      (text)
       close_tag: (end_tag
         name: (tag_name)))))
 
@@ -178,7 +173,9 @@ HTML element with attributes
           name: (attribute_name)
           value: (attribute_value))
         attribute: (attribute
-          name: (attribute_name)))
+          (razor_directive_attribute
+            directive: (identifier)
+            value: (attribute_value))))
       (text)
       close_tag: (end_tag
         name: (tag_name)))))
@@ -212,8 +209,9 @@ Multiple directives
 
 (document
   (directive
-    (page_directive
-      route: (string_literal)))
+    (page_directive))
+  (markup
+    (text))
   (directive
     (inject_directive
       type: (csharp_type
@@ -242,13 +240,18 @@ If statement
   (control_structure
     (if_statement
       condition: (csharp_expression_content)
-      body: (csharp_block_content
-        (normal_element
-          open_tag: (start_tag
-            name: (tag_name))
-          (text)
-          close_tag: (end_tag
-            name: (tag_name)))))))
+      body: (csharp_block_content)))
+  (markup
+    (text))
+  (markup
+    (normal_element
+      open_tag: (start_tag
+        name: (tag_name))
+      (text)
+      close_tag: (end_tag
+        name: (tag_name))))
+  (markup
+    (text)))
 
 ================================================================================
 Foreach loop
@@ -268,17 +271,20 @@ Foreach loop
         (csharp_identifier))
       item: (csharp_identifier)
       collection: (csharp_expression_content)
-      body: (csharp_block_content
-        (normal_element
-          open_tag: (start_tag
-            name: (tag_name))
-          (inline_expression
-            access: (member_access
-              (csharp_identifier)
-              (csharp_identifier)))
-          (text)
-          close_tag: (end_tag
-            name: (tag_name)))))))
+      body: (csharp_block_content)))
+  (markup
+    (text))
+  (markup
+    (normal_element
+      open_tag: (start_tag
+        name: (tag_name))
+      (inline_expression
+        identifier: (csharp_identifier))
+      (text)
+      close_tag: (end_tag
+        name: (tag_name))))
+  (markup
+    (text)))
 
 ================================================================================
 Nested code blocks
@@ -296,7 +302,9 @@ Nested code blocks
 
 (document
   (code_directive
-    body: (csharp_block_content)))
+    body: (csharp_block_content
+      (csharp_block_content
+        (csharp_block_content)))))
 
 ================================================================================
 Model directive
@@ -337,8 +345,9 @@ Namespace directive
   (directive
     (namespace_directive
       name: (identifier_path
-        (csharp_identifier)
-        (csharp_identifier)))))
+        (csharp_identifier))))
+  (markup
+    (text)))
 
 ================================================================================
 Attribute directive
@@ -352,7 +361,10 @@ Attribute directive
   (directive
     (attribute_directive
       type: (csharp_type
-        (csharp_identifier)))))
+        (csharp_identifier
+          (MISSING "csharp_identifier_token1")))))
+  (markup
+    (text)))
 
 ================================================================================
 Implements directive
@@ -421,7 +433,9 @@ Code block with nested braces
 (document
   (code_block
     body: (csharp_block_content
-      (csharp_block_content))))
+      (csharp_block_content
+        (string_literal)
+        (string_literal)))))
 
 ================================================================================
 Method call in expression
@@ -436,10 +450,8 @@ Method call in expression
     (normal_element
       open_tag: (start_tag
         name: (tag_name))
-      (text)
       (inline_expression
-        call: (method_call
-          (csharp_identifier)))
+        identifier: (csharp_identifier))
       (text)
       close_tag: (end_tag
         name: (tag_name)))))
