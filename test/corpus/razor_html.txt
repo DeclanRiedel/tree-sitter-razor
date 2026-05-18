@@ -8,6 +8,7 @@ razor attribute values
 
 (compilation_unit
   (element
+    (tag_name)
     (razor_html_attribute
       (razor_attribute_name)
       (razor_attribute_value
@@ -23,8 +24,11 @@ razor attribute values
               (await_expression
                 (invocation_expression
                   (identifier)
-                  (argument_list)))))))))
+                  (argument_list))))))))
+    (end_tag
+      (tag_name)))
   (element
+    (tag_name)
     (razor_html_attribute
       (razor_attribute_name)
       (razor_attribute_value
@@ -40,7 +44,9 @@ razor attribute values
               (await_expression
                 (invocation_expression
                   (identifier)
-                  (argument_list))))))))))
+                  (argument_list))))))))
+    (end_tag
+      (tag_name))))
 
 ======
 CSharp in HTML attribute - String(Semantic Highlighting does the rest)
@@ -50,7 +56,13 @@ CSharp in HTML attribute - String(Semantic Highlighting does the rest)
 ----
 
 (compilation_unit
-  (element))
+  (element
+    (tag_name)
+    (html_attribute
+      (html_attribute_name)
+      (html_attribute_value))
+    (end_tag
+      (tag_name))))
 
 ======
 HTML Attribute of empty string
@@ -60,7 +72,13 @@ HTML Attribute of empty string
 ----
 
 (compilation_unit
-  (element))
+  (element
+    (tag_name)
+    (html_attribute
+      (html_attribute_name)
+      (html_attribute_value))
+    (end_tag
+      (tag_name))))
 
 ===
 razor section
@@ -73,7 +91,16 @@ razor section
 (compilation_unit
   (razor_section
     (identifier)
-    (element)))
+    (element
+      (tag_name)
+      (html_attribute
+        (html_attribute_name)
+        (html_attribute_value))
+      (html_attribute
+        (html_attribute_name)
+        (html_attribute_value))
+      (end_tag
+        (tag_name)))))
 
 ======
 form html attribute with value
@@ -83,6 +110,7 @@ form html attribute with value
 
 (compilation_unit
   (element
+    (tag_name)
     (razor_html_attribute
       (razor_attribute_name)
       (razor_attribute_value
@@ -96,6 +124,7 @@ form html attribute with modifier
 
 (compilation_unit
   (element
+    (tag_name)
     (razor_html_attribute
       (razor_attribute_name
         (razor_attribute_modifier)))))
@@ -108,6 +137,7 @@ form html attribute with modifier and value
 
 (compilation_unit
   (element
+    (tag_name)
     (razor_html_attribute
       (razor_attribute_name
         (razor_attribute_modifier))
@@ -122,6 +152,7 @@ form html attribute case insensitive
 
 (compilation_unit
   (element
+    (tag_name)
     (razor_html_attribute
       (razor_attribute_name
         (razor_attribute_modifier)))))
@@ -134,10 +165,16 @@ Mixed text and Razor expression in HTML attribute
 
 (compilation_unit
   (element
-    (razor_explicit_expression
-      (parenthesized_expression
-        (conditional_expression
-          (boolean_literal)
-          (string_literal
-            (string_literal_content))
-          (string_literal))))))
+    (tag_name)
+    (html_attribute
+      (html_attribute_name)
+      (html_attribute_value
+        (razor_explicit_expression
+          (parenthesized_expression
+            (conditional_expression
+              (boolean_literal)
+              (string_literal
+                (string_literal_content))
+              (string_literal))))))
+    (end_tag
+      (tag_name))))

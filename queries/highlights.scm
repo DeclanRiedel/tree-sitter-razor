@@ -58,4 +58,8 @@
 
 (razor_rendermode) @property
 
+(tag_name) @tag
+(html_attribute_name) @attribute
+(html_attribute_value) @string
+
 (razor_attribute_name) @function
