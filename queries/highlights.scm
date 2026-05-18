@@ -63,3 +63,5 @@
 (html_attribute_value) @string
 
 (razor_attribute_name) @function
+(razor_attribute_suffix) @function
+(razor_attribute_modifier) @function

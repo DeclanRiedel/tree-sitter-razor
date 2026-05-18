@@ -126,8 +126,9 @@ form html attribute with modifier
   (element
     (tag_name)
     (razor_html_attribute
-      (razor_attribute_name
-        (razor_attribute_modifier)))))
+      (razor_attribute_name))
+    (boolean_html_attribute
+      (html_attribute_name))))
 
 ======
 form html attribute with modifier and value
@@ -154,8 +155,9 @@ form html attribute case insensitive
   (element
     (tag_name)
     (razor_html_attribute
-      (razor_attribute_name
-        (razor_attribute_modifier)))))
+      (razor_attribute_name))
+    (boolean_html_attribute
+      (html_attribute_name))))
 
 ======
 Mixed text and Razor expression in HTML attribute

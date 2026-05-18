@@ -420,21 +420,33 @@ module.exports = grammar(CSHARP, {
     razor_attribute_name: ($) =>
       seq(
         $._razor_marker,
-        seq(
-          choice(
-            "attributes",
+        choice(
+          "attributes",
+          "formname",
+          "key",
+          "ref",
+          token(prec(10, /on[a-z]+/i)),
+          seq(
             "bind",
-            "formname",
-            token(prec(10, /on[a-z]+/i)),
-            "key",
-            "ref",
+            optional($.razor_attribute_suffix),
+            repeat($.razor_attribute_modifier),
           ),
-          optional($.razor_attribute_modifier),
         ),
       ),
 
+    razor_attribute_suffix: (_) => /-[A-Za-z_][A-Za-z0-9_]*/,
+
     razor_attribute_modifier: (_) =>
-      choice(":culture", ":preventDefault", ":stopPropagation"),
+      choice(
+        ":after",
+        ":culture",
+        ":event",
+        ":format",
+        ":get",
+        ":preventDefault",
+        ":set",
+        ":stopPropagation",
+      ),
 
     html_comment: ($) => seq("<!--", optional($._razor_comment_text), "-->"),
     _html_comment_text: (_) => repeat1(/.|\n|\r/),
