@@ -5,97 +5,88 @@
   "word": "_identifier_token",
   "rules": {
     "compilation_unit": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "REPEAT",
-          "content": {
-            "type": "CHOICE",
-            "members": [
-              {
-                "type": "SYMBOL",
-                "name": "shebang_directive"
-              },
-              {
-                "type": "SYMBOL",
-                "name": "razor_page_directive"
-              },
-              {
-                "type": "SYMBOL",
-                "name": "razor_using_directive"
-              },
-              {
-                "type": "SYMBOL",
-                "name": "razor_model_directive"
-              },
-              {
-                "type": "SYMBOL",
-                "name": "razor_rendermode_directive"
-              },
-              {
-                "type": "SYMBOL",
-                "name": "razor_inject_directive"
-              },
-              {
-                "type": "SYMBOL",
-                "name": "razor_implements_directive"
-              },
-              {
-                "type": "SYMBOL",
-                "name": "razor_layout_directive"
-              },
-              {
-                "type": "SYMBOL",
-                "name": "razor_inherits_directive"
-              },
-              {
-                "type": "SYMBOL",
-                "name": "razor_attribute_directive"
-              },
-              {
-                "type": "SYMBOL",
-                "name": "razor_typeparam_directive"
-              },
-              {
-                "type": "SYMBOL",
-                "name": "razor_namespace_directive"
-              },
-              {
-                "type": "SYMBOL",
-                "name": "razor_preservewhitespace_directive"
-              },
-              {
-                "type": "SYMBOL",
-                "name": "razor_addtaghelper_directive"
-              },
-              {
-                "type": "SYMBOL",
-                "name": "razor_removetaghelper_directive"
-              },
-              {
-                "type": "SYMBOL",
-                "name": "razor_taghelperprefix_directive"
-              }
-            ]
+      "type": "REPEAT",
+      "content": {
+        "type": "CHOICE",
+        "members": [
+          {
+            "type": "SYMBOL",
+            "name": "shebang_directive"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "razor_page_directive"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "razor_using_directive"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "razor_model_directive"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "razor_rendermode_directive"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "razor_inject_directive"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "razor_implements_directive"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "razor_layout_directive"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "razor_inherits_directive"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "razor_attribute_directive"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "razor_typeparam_directive"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "razor_namespace_directive"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "razor_preservewhitespace_directive"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "razor_addtaghelper_directive"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "razor_removetaghelper_directive"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "razor_taghelperprefix_directive"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "_node"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "razor_block"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "_markup_text"
           }
-        },
-        {
-          "type": "REPEAT",
-          "content": {
-            "type": "CHOICE",
-            "members": [
-              {
-                "type": "SYMBOL",
-                "name": "_node"
-              },
-              {
-                "type": "SYMBOL",
-                "name": "razor_block"
-              }
-            ]
-          }
-        }
-      ]
+        ]
+      }
     },
     "_top_level_item": {
       "type": "PREC",
@@ -12187,6 +12178,10 @@
           {
             "type": "SYMBOL",
             "name": "html_comment"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "_html_doctype"
           }
         ]
       }
@@ -12553,13 +12548,79 @@
           "type": "CHOICE",
           "members": [
             {
-              "type": "SYMBOL",
-              "name": "type_parameter_constraints_clause"
+              "type": "ALIAS",
+              "content": {
+                "type": "SYMBOL",
+                "name": "_razor_typeparam_constraints"
+              },
+              "named": true,
+              "value": "type_parameter_constraints_clause"
             },
             {
               "type": "BLANK"
             }
           ]
+        }
+      ]
+    },
+    "_razor_typeparam_constraints": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "TOKEN",
+            "content": {
+              "type": "PREC",
+              "value": 2,
+              "content": {
+                "type": "STRING",
+                "value": "where"
+              }
+            }
+          },
+          "named": false,
+          "value": "where"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "identifier"
+        },
+        {
+          "type": "STRING",
+          "value": ":"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "type_parameter_constraint"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "ALIAS",
+                "content": {
+                  "type": "TOKEN",
+                  "content": {
+                    "type": "PREC",
+                    "value": 2,
+                    "content": {
+                      "type": "STRING",
+                      "value": ","
+                    }
+                  }
+                },
+                "named": false,
+                "value": ","
+              },
+              {
+                "type": "SYMBOL",
+                "name": "type_parameter_constraint"
+              }
+            ]
+          }
         }
       ]
     },
@@ -14095,8 +14156,84 @@
       ]
     },
     "_html_text": {
-      "type": "PATTERN",
-      "value": "[^<>&@.(\\s]([^<>&@]*[^<>&@\\s])?"
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[^<>&@.(\\/\\s]([^<>&@]*[^<>&@\\s])?"
+        }
+      }
+    },
+    "_html_text_punctuation": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": -1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[.(\\/]([^<>&@]*[^<>&@\\s])?"
+        }
+      }
+    },
+    "_html_entity": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "&(#[0-9]+|#[xX][0-9a-fA-F]+|[A-Za-z][A-Za-z0-9]*);"
+        }
+      }
+    },
+    "_html_ampersand": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": -1,
+        "content": {
+          "type": "STRING",
+          "value": "&"
+        }
+      }
+    },
+    "_markup_text": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "_html_text"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_html_text_punctuation"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_markup_dot"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_html_entity"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_html_ampersand"
+        }
+      ]
+    },
+    "_html_doctype": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "<![Dd][Oo][Cc][Tt][Yy][Pp][Ee][^>]*>"
+        }
+      }
     },
     "razor_attribute_value": {
       "type": "SEQ",
@@ -14259,7 +14396,11 @@
                       },
                       {
                         "type": "SYMBOL",
-                        "name": "_html_text"
+                        "name": "razor_block"
+                      },
+                      {
+                        "type": "SYMBOL",
+                        "name": "_markup_text"
                       }
                     ]
                   }
@@ -14620,6 +14761,10 @@
     {
       "type": "SYMBOL",
       "name": "raw_string_content"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "_markup_dot"
     }
   ],
   "inline": [

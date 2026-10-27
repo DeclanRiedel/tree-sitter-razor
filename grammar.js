@@ -14,6 +14,8 @@ module.exports = grammar(CSHARP, {
 
   extras: ($) => [$.razor_comment, $.comment, /\s+/],
 
+  externals: ($, original) => [...original, $._markup_dot],
+
   conflicts: ($, o) => [
     [$.razor_explicit_expression, $._expression_statement_expression],
 
@@ -52,28 +54,28 @@ module.exports = grammar(CSHARP, {
 
   rules: {
     compilation_unit: ($) =>
-      seq(
-        repeat(
-          choice(
-            $.shebang_directive, // this is to make sharing highlights easier
-            $.razor_page_directive,
-            $.razor_using_directive,
-            $.razor_model_directive,
-            $.razor_rendermode_directive,
-            $.razor_inject_directive,
-            $.razor_implements_directive,
-            $.razor_layout_directive,
-            $.razor_inherits_directive,
-            $.razor_attribute_directive,
-            $.razor_typeparam_directive,
-            $.razor_namespace_directive,
-            $.razor_preservewhitespace_directive,
-            $.razor_addtaghelper_directive,
-            $.razor_removetaghelper_directive,
-            $.razor_taghelperprefix_directive,
-          ),
+      repeat(
+        choice(
+          $.shebang_directive, // this is to make sharing highlights easier
+          $.razor_page_directive,
+          $.razor_using_directive,
+          $.razor_model_directive,
+          $.razor_rendermode_directive,
+          $.razor_inject_directive,
+          $.razor_implements_directive,
+          $.razor_layout_directive,
+          $.razor_inherits_directive,
+          $.razor_attribute_directive,
+          $.razor_typeparam_directive,
+          $.razor_namespace_directive,
+          $.razor_preservewhitespace_directive,
+          $.razor_addtaghelper_directive,
+          $.razor_removetaghelper_directive,
+          $.razor_taghelperprefix_directive,
+          $._node,
+          $.razor_block,
+          $._markup_text,
         ),
-        repeat(choice($._node, $.razor_block)),
       ),
 
     _identifier_token: (_) =>
@@ -121,6 +123,7 @@ module.exports = grammar(CSHARP, {
           $.razor_lock,
           $.element,
           $.html_comment,
+          $._html_doctype,
         ),
       ),
 
@@ -176,7 +179,22 @@ module.exports = grammar(CSHARP, {
       seq(
         alias(seq($._razor_marker, "typeparam"), "at_typeparam"),
         field("name", $._name),
-        optional($.type_parameter_constraints_clause),
+        optional(
+          alias(
+            $._razor_typeparam_constraints,
+            $.type_parameter_constraints_clause,
+          ),
+        ),
+      ),
+    _razor_typeparam_constraints: ($) =>
+      seq(
+        alias(token(prec(2, "where")), "where"),
+        $.identifier,
+        ":",
+        $.type_parameter_constraint,
+        repeat(
+          seq(alias(token(prec(2, ",")), ","), $.type_parameter_constraint),
+        ),
       ),
     razor_inject_directive: ($) =>
       seq(
@@ -489,7 +507,22 @@ module.exports = grammar(CSHARP, {
         ),
         '"',
       ),
-    _html_text: (_) => /[^<>&@.(\s]([^<>&@]*[^<>&@\s])?/,
+    _html_text: (_) => token(prec(1, /[^<>&@.(\/\s]([^<>&@]*[^<>&@\s])?/)),
+    _html_text_punctuation: (_) =>
+      token(prec(-1, /[.(\/]([^<>&@]*[^<>&@\s])?/)),
+    _html_entity: (_) =>
+      token(prec(1, /&(#[0-9]+|#[xX][0-9a-fA-F]+|[A-Za-z][A-Za-z0-9]*);/)),
+    _html_ampersand: (_) => token(prec(-1, "&")),
+    _markup_text: ($) =>
+      choice(
+        $._html_text,
+        $._html_text_punctuation,
+        $._markup_dot,
+        $._html_entity,
+        $._html_ampersand,
+      ),
+    _html_doctype: (_) =>
+      token(prec(1, /<![Dd][Oo][Cc][Tt][Yy][Pp][Ee][^>]*>/)),
 
     razor_attribute_value: ($) =>
       seq('"', optional($.modifier), $.expression, '"'),
@@ -520,7 +553,11 @@ module.exports = grammar(CSHARP, {
         ),
         choice(
           "/>",
-          seq(">", repeat(choice($._node, $._html_text)), $._end_tag),
+          seq(
+            ">",
+            repeat(choice($._node, $.razor_block, $._markup_text)),
+            $._end_tag,
+          ),
         ),
       ),
   },

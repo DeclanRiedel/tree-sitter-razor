@@ -17,6 +17,7 @@ enum TokenType {
     RAW_STRING_START,
     RAW_STRING_END,
     RAW_STRING_CONTENT,
+    MARKUP_DOT,
 };
 
 typedef enum {
@@ -109,6 +110,18 @@ void tree_sitter_razor_external_scanner_deserialize(void *payload, const char *b
 
 bool tree_sitter_razor_external_scanner_scan(void *payload, TSLexer *lexer, const bool *valid_symbols) {
     Scanner *scanner = (Scanner *)payload;
+
+    // A "." ends an implicit expression unless an identifier follows it.
+    if (valid_symbols[MARKUP_DOT] && lexer->lookahead == '.' &&
+        !(valid_symbols[OPT_SEMI] && valid_symbols[INTERPOLATION_REGULAR_START])) {
+        advance(lexer);
+        lexer->mark_end(lexer);
+        if (iswalpha(lexer->lookahead) || lexer->lookahead == '_') {
+            return false;
+        }
+        lexer->result_symbol = MARKUP_DOT;
+        return true;
+    }
 
     uint8_t brace_advanced = 0;
     uint8_t quote_count = 0;

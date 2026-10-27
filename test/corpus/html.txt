@@ -65,3 +65,26 @@ complex html
 
 (compilation_unit
   (element))
+
+========
+top-level text
+========
+Welcome to your new app.
+
+<p>Hello, world!</p>
+
+See /help (or the docs).
+---
+
+(compilation_unit
+  (element))
+
+========
+doctype and entities
+========
+<!DOCTYPE html>
+<footer>&copy; 2026 Contoso &amp; Co &#169; &#x2014; Tom & Jerry</footer>
+---
+
+(compilation_unit
+  (element))

@@ -147,3 +147,19 @@ Code Block with HTML
     (element
       (razor_implicit_expression
         (identifier)))))
+
+==================
+code block inside element
+==================
+<div>@{ var total = 1; }</div>
+---
+
+(compilation_unit
+  (element
+    (razor_block
+      (field_declaration
+        (variable_declaration
+          (implicit_type)
+          (variable_declarator
+            (identifier)
+            (integer_literal)))))))
