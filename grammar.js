@@ -176,6 +176,7 @@ module.exports = grammar(CSHARP, {
       seq(
         alias(seq($._razor_marker, "typeparam"), "at_typeparam"),
         field("name", $._name),
+        optional($.type_parameter_constraints_clause),
       ),
     razor_inject_directive: ($) =>
       seq(
@@ -183,14 +184,21 @@ module.exports = grammar(CSHARP, {
         $.variable_declaration,
       ),
     razor_namespace_directive: ($) =>
-      seq(
-        alias(seq($._razor_marker, "namespace"), "at_namespace"),
-        $.qualified_name,
+      prec(
+        1,
+        seq(
+          alias(seq($._razor_marker, "namespace"), "at_namespace"),
+          choice($.qualified_name, $.identifier),
+        ),
       ),
     razor_rendermode_directive: ($) =>
       seq(
         alias(seq($._razor_marker, "rendermode"), "at_rendermode"),
-        $.razor_rendermode,
+        choice(
+          $.razor_rendermode,
+          $.razor_explicit_expression,
+          $.qualified_name,
+        ),
       ),
     razor_rendermode: (_) =>
       choice("InteractiveServer", "InteractiveWebAssembly", "InteractiveAuto"),
